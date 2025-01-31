@@ -3,7 +3,7 @@ function checkingString (string, maxLength) {
 }
 
 function checkingPalindrome (string) {
-  let newString = string.replaceAll(' ', '').toLowerCase();
+  const newString = string.replaceAll(' ', '').toLowerCase();
   let replenishedString = '';
   for (let i = newString.length - 1; i >= 0; i--) {
     replenishedString += newString[i];
@@ -12,13 +12,13 @@ function checkingPalindrome (string) {
 }
 
 function toNumber (string) {
-  let newString = String(string).replaceAll(' ', '');
+  const newString = String(string).replaceAll(' ', '');
   let replenishedString = '';
   for (let i = 0; i <= newString.length - 1; i++) {
-    let currentSymbol = parseInt(newString[i]);
+    const currentSymbol = parseInt(newString[i], 10);
     if (!Number.isNaN(currentSymbol)) {
       replenishedString += newString[i];
     }
   }
- return parseInt(replenishedString);
+  return parseInt(replenishedString, 10);
 }
