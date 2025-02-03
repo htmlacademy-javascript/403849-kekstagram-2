@@ -1,6 +1,5 @@
-const checkingString = (string, maxLength) => {
-  return string.length <= maxLength;
-};
+const checkingString = (string, maxLength) =>
+  string.length <= maxLength;
 
 const checkingPalindrome = (string) => {
   const newString = string.replaceAll(' ', '').toLowerCase();
