@@ -1,8 +1,8 @@
-function checkingString (string, maxLength) {
+const checkingString = (string, maxLength) => {
   return string.length <= maxLength;
 }
 
-function checkingPalindrome (string) {
+const checkingPalindrome = (string) => {
   const newString = string.replaceAll(' ', '').toLowerCase();
   let replenishedString = '';
   for (let i = newString.length - 1; i >= 0; i--) {
@@ -11,7 +11,7 @@ function checkingPalindrome (string) {
   return replenishedString === newString;
 }
 
-function toNumber (string) {
+const parseNumber = (string) => {
   const newString = String(string).replaceAll(' ', '');
   let replenishedString = '';
   for (let i = 0; i <= newString.length - 1; i++) {
