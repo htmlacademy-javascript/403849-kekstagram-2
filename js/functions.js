@@ -1,6 +1,6 @@
 const checkingString = (string, maxLength) => {
   return string.length <= maxLength;
-}
+};
 
 const checkingPalindrome = (string) => {
   const newString = string.replaceAll(' ', '').toLowerCase();
@@ -9,7 +9,7 @@ const checkingPalindrome = (string) => {
     replenishedString += newString[i];
   }
   return replenishedString === newString;
-}
+};
 
 const parseNumber = (string) => {
   const newString = String(string).replaceAll(' ', '');
@@ -21,4 +21,4 @@ const parseNumber = (string) => {
     }
   }
   return parseInt(replenishedString, 10);
-}
+};
