@@ -1,7 +1,9 @@
-const checkingString = (string, maxLength) =>
+const checkString = (string, maxLength) =>
   string.length <= maxLength;
 
-const checkingPalindrome = (string) => {
+checkString('проверяемая строка', 20);
+
+const checkPalindrome = (string) => {
   const newString = string.replaceAll(' ', '').toLowerCase();
   let replenishedString = '';
   for (let i = newString.length - 1; i >= 0; i--) {
@@ -9,6 +11,8 @@ const checkingPalindrome = (string) => {
   }
   return replenishedString === newString;
 };
+
+checkPalindrome('топот');
 
 const parseNumber = (string) => {
   const newString = String(string).replaceAll(' ', '');
@@ -21,3 +25,5 @@ const parseNumber = (string) => {
   }
   return parseInt(replenishedString, 10);
 };
+
+parseNumber('2025 год');
