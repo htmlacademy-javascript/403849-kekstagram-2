@@ -1,4 +1,10 @@
 const PHOTO_COUNT = 25;
+const MIN_VALUE_AVATAR = 1;
+const MAX_VALUE_AVATAR = 6;
+const MIN_VALUE_COMMENTS = 0;
+const MAX_VALUE_COMMENTS = 30;
+const MIN_VALUE_LIKES = 15;
+const MAX_VALUE_LIKES = 200;
 
 const DESCRIPTION = [
   'Когда ты пытаешься работать, но кот решил, что ноутбук — это его новое лежбище',
@@ -72,49 +78,29 @@ const getRandomInteger = (min, max) => {
   return Math.floor(result);
 };
 
-const createRandomInteger = (min, max) => {
-  const previousValues = [];
-  return function () {
-    let currentValue = getRandomInteger(min, max);
-    if(previousValues.length >= (max - min + 1)) {
-      return null;
-    }
-    while (previousValues.includes(currentValue)) {
-      currentValue = getRandomInteger(min, max);
-    }
-    previousValues.push(currentValue);
-    return currentValue;
-  };
-};
-
-const getRandomElement = (elements) => {
-  const getEl = createRandomInteger(0, elements.length - 1);
-  return elements[getEl()];
-};
+const getRandomElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
 const generatePhotoId = createIdGenerator();
 const generatePhotoLinks = createIdGenerator();
-const generateLikes = createRandomInteger(15, 200);
 const generateCommentId = createIdGenerator();
 
 const createComment = () => ({
   id: generateCommentId(),
-  avatar: `img/avatar-${getRandomInteger(1, 6)}.svg`,
+  avatar: `img/avatar-${getRandomInteger(MIN_VALUE_AVATAR, MAX_VALUE_AVATAR)}.svg`,
   message: getRandomElement(MESSAGES),
   name: getRandomElement(NAMES)
 });
 
 const createPhoto = () => {
-  const commentsLength = createRandomInteger(0, 30);
+  const commentsLength = getRandomInteger(MIN_VALUE_COMMENTS, MAX_VALUE_COMMENTS);
   return {
     id: generatePhotoId(),
     url: `photos/${generatePhotoLinks()}.jpg`,
     description: getRandomElement(DESCRIPTION),
-    likes: generateLikes(),
-    comments: Array.from({length: commentsLength()}, createComment)
+    likes: getRandomInteger(MIN_VALUE_LIKES, MAX_VALUE_LIKES),
+    comments: Array.from({length: commentsLength}, createComment)
   };
 };
 
-const allPhotos = Array.from({length: PHOTO_COUNT}, createPhoto);
-
-console.log(allPhotos);
+const getPhotos = () => Array.from({length: PHOTO_COUNT}, createPhoto);
+getPhotos();
