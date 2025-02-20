@@ -1,3 +1,5 @@
+const MINUTES_IN_HOUR = 60;
+
 const checkString = (string, maxLength) =>
   string.length <= maxLength;
 
@@ -28,31 +30,17 @@ const parseNumber = (string) => {
 
 parseNumber('2025 год');
 
+const convertHoursToMinutes = (timeString) => {
+  const [hours, minutes] = timeString.split(':').map(Number);
+  return hours * MINUTES_IN_HOUR + minutes;
+}
+
 const validateMeetingTime = (startDay, finishDay, startMeet, durationMeet) => {
-  const numStartDay = startDay.split(':').map((item) => {
-    return parseInt(item);
-  });
-  const numFinishDay = finishDay.split(':').map((item) => {
-    return parseInt(item);
-  });
-  const numStartMeet = startMeet.split(':').map((item) => {
-    return parseInt(item);
-  });
+  const numStartDay = convertHoursToMinutes(startDay);
+  const numFinishDay = convertHoursToMinutes(finishDay);
+  const numStartMeet = convertHoursToMinutes(startMeet);
 
-  if (numStartMeet[0] < numStartDay[0]) {
-    return false;
-  }
-
-  if (numStartMeet[0] === numStartDay[0] && numStartMeet[1] < numStartDay[1]) {
-    return false;
-  }
-
-  const numFinishMeet = numStartMeet[0] * 60 + numStartMeet[1] + durationMeet;
-  if (numFinishMeet <= numFinishDay[0] * 60 + numFinishDay[1]) {
-    return true;
-  } else {
-    return false;
-  }
+  return numStartDay <= numStartMeet && numStartMeet + durationMeet <= numFinishDay;
 }
 
 validateMeetingTime('8:00', '17:30', '08:00', 900);
