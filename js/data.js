@@ -89,3 +89,4 @@ const getPhotos = () => Array.from({length: PHOTO_COUNT}, createPhoto);
 getPhotos();
 
 export {getPhotos};
+
