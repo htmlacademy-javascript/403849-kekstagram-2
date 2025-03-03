@@ -1,3 +1,7 @@
+const KeyNames = {
+  ESC: 'Escape'
+};
+
 const createIdGenerator = () => {
   let lastGeneratedId = 0;
 
@@ -17,6 +21,6 @@ const getRandomInteger = (min, max) => {
 
 const getRandomElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
-const isEscapeKey = (evt) => evt.key === 'Escape';
+const isEscapeKey = (evt) => evt.key === KeyNames.ESC;
 
 export {createIdGenerator, getRandomInteger, getRandomElement, isEscapeKey};
