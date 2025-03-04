@@ -47,7 +47,6 @@ const createEventCommentsLoader = (comments) => {
     if (showedAmountComments >= comments.length) {
       commentShowCounter.textContent = comments.length;
       commentsLoader.classList.add('hidden');
-      return;
     }
   });
 };
