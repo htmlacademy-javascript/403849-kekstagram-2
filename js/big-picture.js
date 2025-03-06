@@ -1,14 +1,17 @@
 import {isEscapeKey} from './utils.js';
 
+const COMMENTS_PER_LOAD = 5;
+let showedAmountComments = COMMENTS_PER_LOAD;
+let commentsArray = [];
+
 const body = document.querySelector('body');
 const bigPicture = document.querySelector('.big-picture'); // окно полноэкранного просмотра изображения
+const commentsList = bigPicture.querySelector('.social__comments');
 const bigPictureCloseElement = document.querySelector('.big-picture__cancel'); // кнопка закрытия
 const commentCounter = document.querySelector('.social__comment-count'); // счетчик комментариев
 const commentsLoader = document.querySelector('.comments-loader'); // кнопка загрузки комментариев
 const commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment'); // шаблон комментария
 const commentShowCounter = bigPicture.querySelector('.social__comment-shown-count'); // счетчик показанных комментариев
-const COMMENTS_PER_LOAD = 5;
-let showedAmountComments = COMMENTS_PER_LOAD;
 
 // создание большого изображения и его описания, лайков, количества комментариев
 const createBigPicture = (picture) => {
@@ -30,25 +33,42 @@ const fillingListComments = (comments) => {
     commentListFragment.append(comment);
   });
 
-  bigPicture.querySelector('.social__comments').append(commentListFragment);
+  commentsList.append(commentListFragment);
+};
+
+// Функция, обновляющая текстовое содержимое счётчика показанных комментариев
+const updateCommentCounter = () => {
+  commentShowCounter.textContent = showedAmountComments;
+};
+
+// Функция скрытия кнопки загрузки комментариев
+const hideCommentsLoader = () => {
+  commentShowCounter.textContent = commentsArray.length;
+  commentsLoader.classList.add('hidden');
+};
+
+// Функция загрузки комментариев при клике на кнопку (функция-внутренность для события клик)
+const loadMoreComments = (evt) => {
+  evt.preventDefault();
+  fillingListComments(commentsArray.slice(showedAmountComments, showedAmountComments + COMMENTS_PER_LOAD));
+
+  showedAmountComments += COMMENTS_PER_LOAD;
+
+  updateCommentCounter();
+
+  if (showedAmountComments >= commentsArray.length) {
+    hideCommentsLoader();
+  }
 };
 
 // отслеживание кликов по кнопке загрузки комментариев
-const createEventCommentsLoader = (comments) => {
-  commentsLoader.addEventListener('click', (evt) => {
-    evt.preventDefault();
+const createEventCommentsLoader = () => {
+  commentsLoader.addEventListener('click', loadMoreComments);
+};
 
-    fillingListComments(comments.slice(showedAmountComments, showedAmountComments + COMMENTS_PER_LOAD));
-
-    showedAmountComments += COMMENTS_PER_LOAD;
-
-    commentShowCounter.textContent = showedAmountComments;
-
-    if (showedAmountComments >= comments.length) {
-      commentShowCounter.textContent = comments.length;
-      commentsLoader.classList.add('hidden');
-    }
-  });
+// Функция очистки списка комментариев
+const resetComments = () => {
+  bigPicture.querySelector('.social__comments').innerHTML = '';
 };
 
 // создание списка комментариев
@@ -59,44 +79,43 @@ const createCommentsList = (comments) => {
     return;
   }
 
-  bigPicture.querySelector('.social__comments').innerHTML = '';
+  resetComments();
 
   fillingListComments(comments.slice(0, COMMENTS_PER_LOAD));
 
   if (comments.length <= COMMENTS_PER_LOAD) {
-    commentShowCounter.textContent = comments.length;
-    commentsLoader.classList.add('hidden');
+    hideCommentsLoader();
     return;
   }
 
-  createEventCommentsLoader(comments);
+  createEventCommentsLoader();
 
-  commentShowCounter.textContent = showedAmountComments;
+  updateCommentCounter();
 };
 
 // открытие модалки
 const openBigPicture = (picture) => {
-  bigPicture.classList.remove('hidden');
+  commentsArray = picture.comments;
   document.addEventListener('keydown', onDocumentKeydown);
-  commentCounter.classList.add('hidden');
-  commentsLoader.classList.add('hidden');
-  body.classList.add('modal-open');
-  commentCounter.classList.remove('hidden');
-  commentsLoader.classList.remove('hidden');
-  createBigPicture(picture);
 
-  createCommentsList(picture.comments);
+  bigPicture.classList.remove('hidden');
+  body.classList.add('modal-open');
+
+  commentCounter.classList.toggle('hidden', !commentsArray.length);
+  commentsList.classList.toggle('hidden', !commentsArray.length);
+  commentsLoader.classList.toggle('hidden', !commentsArray.length);
+
+  createBigPicture(picture);
+  createCommentsList(commentsArray);
 };
 
 // закрытие модалки
 const closeBigPicture = () => {
-  bigPicture.classList.add('hidden');
+  commentsLoader.removeEventListener('click', loadMoreComments);
   document.removeEventListener('keydown', onDocumentKeydown);
-  commentCounter.classList.remove('hidden');
-  commentsLoader.classList.remove('hidden');
+
+  bigPicture.classList.add('hidden');
   body.classList.remove('modal-open');
-  commentCounter.classList.add('hidden');
-  commentsLoader.classList.add('hidden');
 };
 
 // отслеживание клика по кнопке скрытия модалки
