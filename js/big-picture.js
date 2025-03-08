@@ -62,7 +62,7 @@ const loadMoreComments = (evt) => {
 };
 
 // отслеживание кликов по кнопке загрузки комментариев
-const createEventCommentsLoader = () => {
+const CommentsLoaderClickHandler = () => {
   commentsLoader.addEventListener('click', loadMoreComments);
 };
 
@@ -88,7 +88,7 @@ const createCommentsList = (comments) => {
     return;
   }
 
-  createEventCommentsLoader();
+  CommentsLoaderClickHandler();
 
   updateCommentCounter();
 };
