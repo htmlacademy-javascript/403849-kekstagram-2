@@ -48,7 +48,7 @@ const hideCommentsLoader = () => {
 };
 
 // Функция загрузки комментариев при клике на кнопку (функция-внутренность для события клик)
-const loadMoreComments = (evt) => {
+const commentsLoaderClickHandler = (evt) => {
   evt.preventDefault();
   fillingListComments(commentsArray.slice(showedAmountComments, showedAmountComments + COMMENTS_PER_LOAD));
 
@@ -62,8 +62,8 @@ const loadMoreComments = (evt) => {
 };
 
 // отслеживание кликов по кнопке загрузки комментариев
-const CommentsLoaderClickHandler = () => {
-  commentsLoader.addEventListener('click', loadMoreComments);
+const createEventCommentsLoader = () => {
+  commentsLoader.addEventListener('click', commentsLoaderClickHandler);
 };
 
 // Функция очистки списка комментариев
@@ -88,7 +88,7 @@ const createCommentsList = (comments) => {
     return;
   }
 
-  CommentsLoaderClickHandler();
+  createEventCommentsLoader();
 
   updateCommentCounter();
 };
