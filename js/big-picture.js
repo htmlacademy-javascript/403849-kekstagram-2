@@ -111,7 +111,7 @@ const openBigPicture = (picture) => {
 
 // закрытие модалки
 const closeBigPicture = () => {
-  commentsLoader.removeEventListener('click', loadMoreComments);
+  commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
   document.removeEventListener('keydown', onDocumentKeydown);
 
   bigPicture.classList.add('hidden');
