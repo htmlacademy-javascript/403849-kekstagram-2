@@ -1,4 +1,4 @@
-import {isEscapeKey, onDocumentKeydown} from './utils.js';
+import {onDocumentKeydown} from './utils.js';
 
 const COMMENTS_PER_LOAD = 5;
 let showedAmountComments = COMMENTS_PER_LOAD;
