@@ -2,6 +2,8 @@ const KeyNames = {
   ESC: 'Escape'
 };
 
+const REGEX_VALID_HASHTAG = /^#[a-zа-яё0-9]{1,19}$/i;
+
 const createIdGenerator = () => {
   let lastGeneratedId = 0;
 
@@ -23,4 +25,12 @@ const getRandomElement = (elements) => elements[getRandomInteger(0, elements.len
 
 const isEscapeKey = (evt) => evt.key === KeyNames.ESC;
 
-export {createIdGenerator, getRandomInteger, getRandomElement, isEscapeKey};
+// отслеживание клика по escape
+const onDocumentKeydown = (evt, callback) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    callback();
+  }
+};
+
+export {REGEX_VALID_HASHTAG, createIdGenerator, getRandomInteger, getRandomElement, isEscapeKey, onDocumentKeydown};

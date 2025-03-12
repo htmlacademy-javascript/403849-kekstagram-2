@@ -1,4 +1,4 @@
-import {isEscapeKey} from './utils.js';
+import {isEscapeKey, onDocumentKeydown} from './utils.js';
 
 const COMMENTS_PER_LOAD = 5;
 let showedAmountComments = COMMENTS_PER_LOAD;
@@ -96,7 +96,7 @@ const createCommentsList = (comments) => {
 // открытие модалки
 const openBigPicture = (picture) => {
   commentsArray = picture.comments;
-  document.addEventListener('keydown', onDocumentKeydown);
+  document.addEventListener('keydown', closeModalOnEsc);
 
   bigPicture.classList.remove('hidden');
   body.classList.add('modal-open');
@@ -112,7 +112,7 @@ const openBigPicture = (picture) => {
 // закрытие модалки
 const closeBigPicture = () => {
   commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
-  document.removeEventListener('keydown', onDocumentKeydown);
+  document.removeEventListener('keydown', closeModalOnEsc);
 
   bigPicture.classList.add('hidden');
   body.classList.remove('modal-open');
@@ -123,12 +123,9 @@ bigPictureCloseElement.addEventListener('click', () => {
   closeBigPicture();
 });
 
-// отслеживание клика по escape
-function onDocumentKeydown(evt) {
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    closeBigPicture();
-  }
+// Закрытие модального окна по нажатию esc
+function closeModalOnEsc(evt) {
+  onDocumentKeydown(evt, closeBigPicture);
 }
 
 export {openBigPicture};
