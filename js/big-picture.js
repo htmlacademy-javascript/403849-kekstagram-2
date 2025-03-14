@@ -5,15 +5,15 @@ let showedAmountComments = COMMENTS_PER_LOAD;
 let commentsArray = [];
 
 const body = document.querySelector('body');
-const bigPicture = document.querySelector('.big-picture'); // окно полноэкранного просмотра изображения
+const bigPicture = document.querySelector('.big-picture'); // Окно полноэкранного просмотра изображения
 const commentsList = bigPicture.querySelector('.social__comments');
-const bigPictureCloseElement = document.querySelector('.big-picture__cancel'); // кнопка закрытия
-const commentCounter = document.querySelector('.social__comment-count'); // счетчик комментариев
-const commentsLoader = document.querySelector('.comments-loader'); // кнопка загрузки комментариев
-const commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment'); // шаблон комментария
-const commentShowCounter = bigPicture.querySelector('.social__comment-shown-count'); // счетчик показанных комментариев
+const bigPictureCloseElement = document.querySelector('.big-picture__cancel'); // Кнопка закрытия
+const commentCounter = document.querySelector('.social__comment-count'); // Счетчик комментариев
+const commentsLoader = document.querySelector('.comments-loader'); // Кнопка загрузки комментариев
+const commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment'); // Шаблон комментария
+const commentShowCounter = bigPicture.querySelector('.social__comment-shown-count'); // Счетчик показанных комментариев
 
-// создание большого изображения и его описания, лайков, количества комментариев
+// Создание большого изображения и его описания, лайков, количества комментариев
 const createBigPicture = (picture) => {
   bigPicture.querySelector('.big-picture__img img').src = picture.url;
   bigPicture.querySelector('.likes-count').textContent = picture.likes;
@@ -21,7 +21,7 @@ const createBigPicture = (picture) => {
   bigPicture.querySelector('.social__caption').textContent = picture.description;
 };
 
-// наполнение списка комментариев
+// Наполнение списка комментариев
 const fillingListComments = (comments) => {
   const commentListFragment = document.createDocumentFragment();
 
@@ -61,7 +61,7 @@ const commentsLoaderClickHandler = (evt) => {
   }
 };
 
-// отслеживание кликов по кнопке загрузки комментариев
+// Отслеживание кликов по кнопке загрузки комментариев
 const createEventCommentsLoader = () => {
   commentsLoader.addEventListener('click', commentsLoaderClickHandler);
 };
@@ -71,7 +71,7 @@ const resetComments = () => {
   bigPicture.querySelector('.social__comments').innerHTML = '';
 };
 
-// создание списка комментариев
+// Создание списка комментариев
 const createCommentsList = (comments) => {
   showedAmountComments = COMMENTS_PER_LOAD;
 
@@ -93,7 +93,7 @@ const createCommentsList = (comments) => {
   updateCommentCounter();
 };
 
-// открытие модалки
+// Открытие модалки
 const openBigPicture = (picture) => {
   commentsArray = picture.comments;
   document.addEventListener('keydown', onDocumentKeydown);
@@ -109,7 +109,7 @@ const openBigPicture = (picture) => {
   createCommentsList(commentsArray);
 };
 
-// закрытие модалки
+// Закрытие модалки
 const closeBigPicture = () => {
   commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
   document.removeEventListener('keydown', onDocumentKeydown);
@@ -118,13 +118,14 @@ const closeBigPicture = () => {
   body.classList.remove('modal-open');
 };
 
-// отслеживание клика по кнопке скрытия модалки
+// Отслеживание клика по кнопке скрытия модалки
 bigPictureCloseElement.addEventListener('click', () => {
   closeBigPicture();
 });
 
-// отслеживание клика по escape
-function onDocumentKeydown(evt) {
+
+// Отслеживание клика по escape
+function onDocumentKeydown (evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeBigPicture();
