@@ -1,4 +1,13 @@
-import {isEscapeKey, onDocumentKeydown, REGEX_VALID_HASHTAG} from './utils.js';
+import {isEscapeKey} from './utils.js';
+const REGEX_VALID_HASHTAG = /^#[a-zа-яё0-9]{1,19}$/i;
+const TextErrors = {
+  DESCRIPTION_LENGTH: 'Длина комментария не может составлять больше 140 символов',
+  HASHTAG_COUNT: 'Нельзя использовать более 5 хештегов',
+  HASHTAG_DUPLICATE: 'Один и тот же хэштег не может быть использован дважды',
+  HASHTAG_INVALID: 'Невалидный хештег'
+};
+const HASHTAG_LENGTH = 5;
+const DESCRIPTION_LENGTH = 140;
 
 const body = document.querySelector('body');
 const form = document.querySelector('.img-upload__form'); // Форма загрузки нового изображения на сайт
@@ -12,14 +21,14 @@ let textHashtagError = '';
 
 // Функция открытия формы редактирования изображения
 const inputUploadChangeHandler = () => {
-  document.addEventListener('keydown', closeModalOnEsc);
+  document.addEventListener('keydown', onDocumentKeydown);
   formOverlay.classList.remove('hidden');
   body.classList.add('modal-open');
 };
 
 // Функция закрытия формы редактирования изображения
 const buttonCancelClickHandler = () => {
-  document.removeEventListener('keydown', closeModalOnEsc);
+  document.removeEventListener('keydown', onDocumentKeydown);
   formOverlay.classList.add('hidden');
   body.classList.remove('modal-open');
   inputUpload.value = '';
@@ -33,9 +42,12 @@ inputUpload.addEventListener('change', inputUploadChangeHandler);
 // Отслеживание клика по кнопке закрытия формы
 buttonCancel.addEventListener('click', buttonCancelClickHandler);
 
-// Закрытие модального окна по нажатию esc
-function closeModalOnEsc(evt) {
-  onDocumentKeydown(evt, buttonCancelClickHandler);
+// Отслеживание клика по escape
+function onDocumentKeydown (evt) {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    buttonCancelClickHandler();
+  }
 }
 
 
@@ -48,21 +60,13 @@ const pristine = new Pristine(form, {
 });
 
 // Функция проверки поля комментариев
-const validateInputDescription = (value) => {
-  if (!value.length) {
-    return true;
-  }
-  if (value.length > 140) {
-    return false;
-  }
-  return true;
-};
+const validateInputDescription = (value) => value.length <= DESCRIPTION_LENGTH;
 
 // Добавление валидатора для поля описания фотографии (комментария))
 pristine.addValidator(
   inputDescription,
   validateInputDescription,
-  'Длина комментария не может составлять больше 140 символов'
+  TextErrors.DESCRIPTION_LENGTH
 );
 
 // Коллбек, останавливающий всплытие события нажатия кнопки Esc
@@ -85,28 +89,22 @@ const validateInputHashtags = (value) => {
     return true;
   }
 
-  if (hashtags.length > 5) {
-    textHashtagError = 'Нельзя использовать более 5 хештегов';
+  if (hashtags.length > HASHTAG_LENGTH) {
+    textHashtagError = TextErrors.HASHTAG_COUNT;
     return false;
   }
 
   const hashtagsSet = new Set(hashtags);
 
   if (hashtagsSet.size < hashtags.length) {
-    textHashtagError = 'Один и тот же хэштег не может быть использован дважды';
+    textHashtagError = TextErrors.HASHTAG_DUPLICATE;
     return false;
   }
 
-  let i = 0;
+  const isHashtagsValid = hashtags.every((item) => REGEX_VALID_HASHTAG.test(item));
 
-  hashtags.forEach((item) => {
-    if (!REGEX_VALID_HASHTAG.test(item)) {
-      i += 1;
-    }
-  });
-
-  if (i) {
-    textHashtagError = 'Невалидный хештег';
+  if (!isHashtagsValid) {
+    textHashtagError = TextErrors.HASHTAG_INVALID;
     return false;
   }
 
