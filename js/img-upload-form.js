@@ -1,4 +1,7 @@
 import {isEscapeKey} from './utils.js';
+import {addListeners, removeListeners} from './img-editor.js';
+
+
 const REGEX_VALID_HASHTAG = /^#[a-zа-яё0-9]{1,19}$/i;
 const TextErrors = {
   DESCRIPTION_LENGTH: 'Длина комментария не может составлять больше 140 символов',
@@ -22,6 +25,7 @@ let textHashtagError = '';
 // Функция открытия формы редактирования изображения
 const inputUploadChangeHandler = () => {
   document.addEventListener('keydown', onDocumentKeydown);
+  addListeners();
   formOverlay.classList.remove('hidden');
   body.classList.add('modal-open');
 };
@@ -29,6 +33,7 @@ const inputUploadChangeHandler = () => {
 // Функция закрытия формы редактирования изображения
 const buttonCancelClickHandler = () => {
   document.removeEventListener('keydown', onDocumentKeydown);
+  removeListeners();
   formOverlay.classList.add('hidden');
   body.classList.remove('modal-open');
   inputUpload.value = '';
