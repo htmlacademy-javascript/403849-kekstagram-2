@@ -128,7 +128,7 @@ function addSlider () {
     effectLevel.value = sliderContainer.noUiSlider.get();
 
     const checkRadio = form.querySelector('.effects__radio:checked').value;
-    const effect = effectsParams.find((e) => checkRadio === e.name);
+    const effect = effectsParams.find((el) => checkRadio === el.name);
 
     if (!effect) {
       return;
@@ -155,7 +155,7 @@ radioButtons.forEach((item) => {
       return;
     }
     if (evt.target.checked) {
-      const effect = effectsParams.find((e) => evt.target.value === e.name);
+      const effect = effectsParams.find((el) => evt.target.value === el.name);
       sliderContainer.noUiSlider.updateOptions(effect.options);
       sliderContainer.noUiSlider.set(effect.default);
 
