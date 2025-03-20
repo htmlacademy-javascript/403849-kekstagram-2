@@ -1,5 +1,6 @@
 import {isEscapeKey} from './utils.js';
 import {addListeners, removeListeners} from './img-editor.js';
+import {sendData} from './api.js';
 
 
 const REGEX_VALID_HASHTAG = /^#[a-zа-яё0-9]{1,19}$/i;
@@ -39,6 +40,7 @@ const buttonCancelClickHandler = () => {
   inputUpload.value = '';
   inputHashtags.value = '';
   inputDescription.value = '';
+  form.querySelector('#effect-none').checked = true;
 };
 
 // Отслеживание загрузки изображения в поле
@@ -126,13 +128,60 @@ pristine.addValidator(
   getHashtagErrorMessage
 );
 
+const buttonSuccessClickHandler = () => {
+  document.querySelector('.success').remove();
+  document.removeEventListener('keydown', onDocumentSuccessKeydown);
+};
+
+function onDocumentSuccessKeydown (evt) {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    buttonSuccessClickHandler();
+  }
+};
+
+
+const showSuccessMessage = () => {
+  const successTemplate = document.querySelector('#success').content.querySelector('.success');
+  const successText = successTemplate.cloneNode(true);
+  const buttonSuccess = successText.querySelector('.success__button');
+  buttonSuccess.addEventListener('click', buttonSuccessClickHandler);
+  document.addEventListener('keydown', onDocumentSuccessKeydown);
+  body.append(successText);
+};
+
+const buttonErrorClickHandler = () => {
+  document.querySelector('.error').remove();
+  document.removeEventListener('keydown', onDocumentErrorKeydown);
+};
+
+function onDocumentErrorKeydown (evt) {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    buttonErrorClickHandler();
+  }
+};
+
+const showErrorMessage = () => {
+  const errorTemplate = document.querySelector('#error').content.querySelector('.error');
+  const errorText = errorTemplate.cloneNode(true);
+  const buttonError = errorText.querySelector('.error__button');
+  buttonError.addEventListener('click', buttonErrorClickHandler);
+  document.addEventListener('keydown', onDocumentErrorKeydown);
+  body.append(errorText);
+};
+
 // Функция валидации и отправки формы
 const formSubmitHandler = (evt) => {
   evt.preventDefault();
 
   const isValid = pristine.validate();
   if (isValid) {
-    evt.target.submit();
+    sendData(form).then(() => {
+      buttonCancelClickHandler();
+      showSuccessMessage();
+    })
+    .catch(showErrorMessage);
   }
 };
 

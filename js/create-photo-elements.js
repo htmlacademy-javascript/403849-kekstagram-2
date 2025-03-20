@@ -1,26 +1,38 @@
-import {getPhotos} from './data.js';
+import {getData} from './api.js';
 import {openBigPicture} from './big-picture.js';
 
+const ERROR_SHOW_TIME = 5000;
+const body = document.querySelector('body');
 const picturesContainer = document.querySelector('.pictures');
 
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
-const pictureElements = getPhotos();
+const showErrorMessage = () => {
+  const errorTemplate = document.querySelector('#data-error').content.querySelector('.data-error');
+  const errorText = errorTemplate.cloneNode(true);
+  body.append(errorText);
+  setTimeout(() => {
+    document.querySelector('.data-error').remove();
+  }, ERROR_SHOW_TIME)
+};
 
-const photoListFragment = document.createDocumentFragment();
+getData().then((data) => {
+  const photoListFragment = document.createDocumentFragment();
 
-pictureElements.forEach((item) => {
-  const pictureElement = pictureTemplate.cloneNode(true);
-  pictureElement.querySelector('.picture__img').src = item.url;
-  pictureElement.querySelector('.picture__img').alt = item.description;
-  pictureElement.querySelector('.picture__likes').textContent = item.likes;
-  pictureElement.querySelector('.picture__comments').textContent = item.comments.length;
+  data.forEach((item) => {
+    const pictureElement = pictureTemplate.cloneNode(true);
+    pictureElement.querySelector('.picture__img').src = item.url;
+    pictureElement.querySelector('.picture__img').alt = item.description;
+    pictureElement.querySelector('.picture__likes').textContent = item.likes;
+    pictureElement.querySelector('.picture__comments').textContent = item.comments.length;
 
-  pictureElement.addEventListener('click', () => {
-    openBigPicture(item);
+    pictureElement.addEventListener('click', () => {
+      openBigPicture(item);
+    });
+
+    photoListFragment.append(pictureElement);
   });
 
-  photoListFragment.append(pictureElement);
-});
-
-picturesContainer.append(photoListFragment);
+  picturesContainer.append(photoListFragment);
+})
+.catch(showErrorMessage);
