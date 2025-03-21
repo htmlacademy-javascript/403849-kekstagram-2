@@ -140,13 +140,13 @@ function onDocumentSuccessKeydown (evt) {
     evt.preventDefault();
     buttonSuccessClickHandler();
   }
-};
+}
 
 function successTextClickHandler (evt) {
   if (evt.target.classList.contains('success')) {
     buttonSuccessClickHandler();
   }
-};
+}
 
 const showSuccessMessage = () => {
   const successTemplate = document.querySelector('#success').content.querySelector('.success');
@@ -170,13 +170,13 @@ function onDocumentErrorKeydown (evt) {
     evt.preventDefault();
     buttonErrorClickHandler();
   }
-};
+}
 
 function errorTextClickHandler (evt) {
   if (evt.target.classList.contains('error')) {
     buttonErrorClickHandler();
   }
-};
+}
 
 const showErrorMessage = () => {
   const errorTemplate = document.querySelector('#error').content.querySelector('.error');
@@ -198,7 +198,7 @@ const formSubmitHandler = (evt) => {
       buttonCancelClickHandler();
       showSuccessMessage();
     })
-    .catch(showErrorMessage);
+      .catch(showErrorMessage);
   }
 };
 

@@ -10,28 +10,28 @@ const Method = {
 };
 
 const getData = () => fetch(`${BASE_URL}${Route.GET_DATA}`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error();
-      }
-      return response.json();
-    })
-    .catch(() => {
+  .then((response) => {
+    if (!response.ok) {
       throw new Error();
-    });
+    }
+    return response.json();
+  })
+  .catch(() => {
+    throw new Error();
+  });
 
 const sendData = (form) => fetch(`${BASE_URL}${Route.SEND_DATA}`, {
-    method: Method.POST,
-    body: new FormData(form)
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error();
-      }
-      return response.json();
-    })
-    .catch(() => {
+  method: Method.POST,
+  body: new FormData(form)
+})
+  .then((response) => {
+    if (!response.ok) {
       throw new Error();
-    });
+    }
+    return response.json();
+  })
+  .catch(() => {
+    throw new Error();
+  });
 
-export {getData, sendData}
+export {getData, sendData};

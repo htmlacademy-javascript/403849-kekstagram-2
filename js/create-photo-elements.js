@@ -13,7 +13,7 @@ const showErrorMessage = () => {
   body.append(errorText);
   setTimeout(() => {
     document.querySelector('.data-error').remove();
-  }, ERROR_SHOW_TIME)
+  }, ERROR_SHOW_TIME);
 };
 
 const createPhotoList = (data) => {
@@ -37,4 +37,4 @@ const createPhotoList = (data) => {
 };
 
 getData().then((data) => createPhotoList(data))
-.catch(showErrorMessage);
+  .catch(showErrorMessage);
