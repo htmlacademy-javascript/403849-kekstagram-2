@@ -1,5 +1,6 @@
 import {isEscapeKey} from './utils.js';
 import {addListeners, removeListeners} from './img-editor.js';
+import {sendData} from './api.js';
 
 
 const REGEX_VALID_HASHTAG = /^#[a-zа-яё0-9]{1,19}$/i;
@@ -39,6 +40,7 @@ const buttonCancelClickHandler = () => {
   inputUpload.value = '';
   inputHashtags.value = '';
   inputDescription.value = '';
+  form.querySelector('#effect-none').checked = true;
 };
 
 // Отслеживание загрузки изображения в поле
@@ -126,13 +128,77 @@ pristine.addValidator(
   getHashtagErrorMessage
 );
 
+// Если форма отправлена успешно
+
+const buttonSuccessClickHandler = () => {
+  document.querySelector('.success').remove();
+  document.removeEventListener('keydown', onDocumentSuccessKeydown);
+};
+
+function onDocumentSuccessKeydown (evt) {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    buttonSuccessClickHandler();
+  }
+}
+
+function successTextClickHandler (evt) {
+  if (evt.target.classList.contains('success')) {
+    buttonSuccessClickHandler();
+  }
+}
+
+const showSuccessMessage = () => {
+  const successTemplate = document.querySelector('#success').content.querySelector('.success');
+  const successText = successTemplate.cloneNode(true);
+  const buttonSuccess = successText.querySelector('.success__button');
+  buttonSuccess.addEventListener('click', buttonSuccessClickHandler);
+  document.addEventListener('keydown', onDocumentSuccessKeydown);
+  successText.addEventListener('click', successTextClickHandler);
+  body.append(successText);
+};
+
+// Если форма отправлена с ошибкой
+
+const buttonErrorClickHandler = () => {
+  document.querySelector('.error').remove();
+  document.removeEventListener('keydown', onDocumentErrorKeydown);
+};
+
+function onDocumentErrorKeydown (evt) {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    buttonErrorClickHandler();
+  }
+}
+
+function errorTextClickHandler (evt) {
+  if (evt.target.classList.contains('error')) {
+    buttonErrorClickHandler();
+  }
+}
+
+const showErrorMessage = () => {
+  const errorTemplate = document.querySelector('#error').content.querySelector('.error');
+  const errorText = errorTemplate.cloneNode(true);
+  const buttonError = errorText.querySelector('.error__button');
+  buttonError.addEventListener('click', buttonErrorClickHandler);
+  document.addEventListener('keydown', onDocumentErrorKeydown);
+  errorText.addEventListener('click', errorTextClickHandler);
+  body.append(errorText);
+};
+
 // Функция валидации и отправки формы
 const formSubmitHandler = (evt) => {
   evt.preventDefault();
 
   const isValid = pristine.validate();
   if (isValid) {
-    evt.target.submit();
+    sendData(form).then(() => {
+      buttonCancelClickHandler();
+      showSuccessMessage();
+    })
+      .catch(showErrorMessage);
   }
 };
 
