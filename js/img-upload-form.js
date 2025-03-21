@@ -128,6 +128,8 @@ pristine.addValidator(
   getHashtagErrorMessage
 );
 
+// Если форма отправлена успешно
+
 const buttonSuccessClickHandler = () => {
   document.querySelector('.success').remove();
   document.removeEventListener('keydown', onDocumentSuccessKeydown);
@@ -140,6 +142,11 @@ function onDocumentSuccessKeydown (evt) {
   }
 };
 
+function successTextClickHandler (evt) {
+  if (evt.target.classList.contains('success')) {
+    buttonSuccessClickHandler();
+  }
+};
 
 const showSuccessMessage = () => {
   const successTemplate = document.querySelector('#success').content.querySelector('.success');
@@ -147,8 +154,11 @@ const showSuccessMessage = () => {
   const buttonSuccess = successText.querySelector('.success__button');
   buttonSuccess.addEventListener('click', buttonSuccessClickHandler);
   document.addEventListener('keydown', onDocumentSuccessKeydown);
+  successText.addEventListener('click', successTextClickHandler);
   body.append(successText);
 };
+
+// Если форма отправлена с ошибкой
 
 const buttonErrorClickHandler = () => {
   document.querySelector('.error').remove();
@@ -162,12 +172,19 @@ function onDocumentErrorKeydown (evt) {
   }
 };
 
+function errorTextClickHandler (evt) {
+  if (evt.target.classList.contains('error')) {
+    buttonErrorClickHandler();
+  }
+};
+
 const showErrorMessage = () => {
   const errorTemplate = document.querySelector('#error').content.querySelector('.error');
   const errorText = errorTemplate.cloneNode(true);
   const buttonError = errorText.querySelector('.error__button');
   buttonError.addEventListener('click', buttonErrorClickHandler);
   document.addEventListener('keydown', onDocumentErrorKeydown);
+  errorText.addEventListener('click', errorTextClickHandler);
   body.append(errorText);
 };
 

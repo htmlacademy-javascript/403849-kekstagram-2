@@ -16,7 +16,7 @@ const showErrorMessage = () => {
   }, ERROR_SHOW_TIME)
 };
 
-getData().then((data) => {
+const createPhotoList = (data) => {
   const photoListFragment = document.createDocumentFragment();
 
   data.forEach((item) => {
@@ -34,5 +34,7 @@ getData().then((data) => {
   });
 
   picturesContainer.append(photoListFragment);
-})
+};
+
+getData().then((data) => createPhotoList(data))
 .catch(showErrorMessage);
