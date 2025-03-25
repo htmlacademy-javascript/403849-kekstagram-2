@@ -96,7 +96,7 @@ const createCommentsList = (comments) => {
 // Открытие модалки
 const openBigPicture = (picture) => {
   commentsArray = picture.comments;
-  document.addEventListener('keydown', onDocumentKeydown);
+  document.addEventListener('keydown', elKeydownHandler);
 
   bigPicture.classList.remove('hidden');
   body.classList.add('modal-open');
@@ -112,7 +112,7 @@ const openBigPicture = (picture) => {
 // Закрытие модалки
 const closeBigPicture = () => {
   commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
-  document.removeEventListener('keydown', onDocumentKeydown);
+  document.removeEventListener('keydown', elKeydownHandler);
 
   bigPicture.classList.add('hidden');
   body.classList.remove('modal-open');
@@ -125,7 +125,7 @@ bigPictureCloseElement.addEventListener('click', () => {
 
 
 // Отслеживание клика по escape
-function onDocumentKeydown (evt) {
+function elKeydownHandler (evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeBigPicture();

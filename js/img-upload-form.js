@@ -25,7 +25,7 @@ let textHashtagError = '';
 
 // Функция открытия формы редактирования изображения
 const inputUploadChangeHandler = () => {
-  document.addEventListener('keydown', onDocumentKeydown);
+  document.addEventListener('keydown', elKeydownHandler);
   addListeners();
   formOverlay.classList.remove('hidden');
   body.classList.add('modal-open');
@@ -33,7 +33,7 @@ const inputUploadChangeHandler = () => {
 
 // Функция закрытия формы редактирования изображения
 const buttonCancelClickHandler = () => {
-  document.removeEventListener('keydown', onDocumentKeydown);
+  document.removeEventListener('keydown', elKeydownHandler);
   removeListeners();
   formOverlay.classList.add('hidden');
   body.classList.remove('modal-open');
@@ -50,7 +50,7 @@ inputUpload.addEventListener('change', inputUploadChangeHandler);
 buttonCancel.addEventListener('click', buttonCancelClickHandler);
 
 // Отслеживание клика по escape
-function onDocumentKeydown (evt) {
+function elKeydownHandler (evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     buttonCancelClickHandler();
@@ -162,10 +162,10 @@ const showSuccessMessage = () => {
 
 const buttonErrorClickHandler = () => {
   document.querySelector('.error').remove();
-  document.removeEventListener('keydown', onDocumentErrorKeydown);
+  document.removeEventListener('keydown', elErrorKeydownHandler);
 };
 
-function onDocumentErrorKeydown (evt) {
+function elErrorKeydownHandler (evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     buttonErrorClickHandler();
@@ -183,7 +183,7 @@ const showErrorMessage = () => {
   const errorText = errorTemplate.cloneNode(true);
   const buttonError = errorText.querySelector('.error__button');
   buttonError.addEventListener('click', buttonErrorClickHandler);
-  document.addEventListener('keydown', onDocumentErrorKeydown);
+  document.addEventListener('keydown', elErrorKeydownHandler);
   errorText.addEventListener('click', errorTextClickHandler);
   body.append(errorText);
 };
