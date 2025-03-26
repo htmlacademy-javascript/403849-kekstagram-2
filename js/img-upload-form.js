@@ -4,18 +4,22 @@ import {sendData} from './api.js';
 
 
 const REGEX_VALID_HASHTAG = /^#[a-zа-яё0-9]{1,19}$/i;
+const HASHTAG_LENGTH = 5;
+const DESCRIPTION_LENGTH = 140;
+
 const TextErrors = {
   DESCRIPTION_LENGTH: 'Длина комментария не может составлять больше 140 символов',
   HASHTAG_COUNT: 'Нельзя использовать более 5 хештегов',
   HASHTAG_DUPLICATE: 'Один и тот же хэштег не может быть использован дважды',
   HASHTAG_INVALID: 'Невалидный хештег'
 };
-const HASHTAG_LENGTH = 5;
-const DESCRIPTION_LENGTH = 140;
+
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 
 const body = document.querySelector('body');
 const form = document.querySelector('.img-upload__form'); // Форма загрузки нового изображения на сайт
 const inputUpload = form.querySelector('.img-upload__input'); // Поле загрузки нового изображения (выбора файла)
+const imgPreview = form.querySelector('.img-upload__preview img'); // Предварительный просмотр фотографии
 const formOverlay = form.querySelector('.img-upload__overlay'); // Форма редактирования изображения
 const buttonCancel = form.querySelector('.img-upload__cancel'); // Кнопка для закрытия формы редактирования изображения
 const inputHashtags = form.querySelector('.text__hashtags'); // Поле ввода хэштегов
@@ -29,6 +33,12 @@ const inputUploadChangeHandler = () => {
   addListeners();
   formOverlay.classList.remove('hidden');
   body.classList.add('modal-open');
+  const file = inputUpload.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = FILE_TYPES.some((type) => fileName.endsWith(type));
+  if (matches) {
+    imgPreview.src = URL.createObjectURL(file);
+  }
 };
 
 // Функция закрытия формы редактирования изображения
