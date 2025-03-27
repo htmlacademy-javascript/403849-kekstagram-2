@@ -12,7 +12,7 @@ const Method = {
 };
 
 const getData = () => fetchApi(`${BASE_URL}${Route.GET_DATA}`);
-const sendData = (form) => fetchApi(`${BASE_URL}${Route.SEND_DATA}k`, {
+const sendData = (form) => fetchApi(`${BASE_URL}${Route.SEND_DATA}`, {
   method: Method.POST,
   body: new FormData(form)
 });
