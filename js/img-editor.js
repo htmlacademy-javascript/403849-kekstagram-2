@@ -125,7 +125,8 @@ function addSlider () {
 
   // Навешивание слушателя события передвижения ползунка слайдера
   sliderContainer.noUiSlider.on('update', () => {
-    effectLevel.value = sliderContainer.noUiSlider.get();
+    const sliderValue = Number(sliderContainer.noUiSlider.get()).toFixed(1);
+    effectLevel.value = sliderValue % 1 ? sliderValue : sliderValue | 0;
 
     const checkRadio = form.querySelector('.effects__radio:checked').value;
     const effect = effectsParams.find((el) => checkRadio === el.name);
@@ -145,6 +146,8 @@ const removeListeners = () => {
   buttonScaleBigger.removeEventListener('click', buttonBiggerClickHandler);
   sliderContainer.noUiSlider.destroy();
   imgPreview.style.filter = '';
+  scaleControl.value = '100%';
+  effectLevel.value = '';
 };
 
 radioButtons.forEach((item) => {
