@@ -111,6 +111,9 @@ const addListeners = () => {
 };
 
 function addSlider () {
+  if (sliderContainer.noUiSlider) {
+    sliderContainer.noUiSlider.destroy();
+  }
   // Создание слайдера в контейнере
   noUiSlider.create(sliderContainer, {
     range: {
