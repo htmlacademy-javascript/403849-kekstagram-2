@@ -29,6 +29,42 @@ const effectsPreviews = form.querySelectorAll('.effects__preview');
 let textHashtagError = '';
 let pristine;
 
+// Функция проверки поля комментариев
+const validateInputDescription = (value) => value.length <= DESCRIPTION_LENGTH;
+
+// Функция валидации поля хештегов
+const validateInputHashtags = (value) => {
+  const hashtags = value.split(' ').filter((item) => item.length).map((item) => item.toLowerCase());
+
+  if (!value.length) {
+    return true;
+  }
+
+  if (hashtags.length > HASHTAG_LENGTH) {
+    textHashtagError = TextErrors.HASHTAG_COUNT;
+    return false;
+  }
+
+  const hashtagsSet = new Set(hashtags);
+
+  if (hashtagsSet.size < hashtags.length) {
+    textHashtagError = TextErrors.HASHTAG_DUPLICATE;
+    return false;
+  }
+
+  const isHashtagsValid = hashtags.every((item) => REGEX_VALID_HASHTAG.test(item));
+
+  if (!isHashtagsValid) {
+    textHashtagError = TextErrors.HASHTAG_INVALID;
+    return false;
+  }
+
+  return true;
+};
+
+// Функция передачи сообщения об ошибке
+const getHashtagErrorMessage = () => textHashtagError;
+
 const initValidator = () => {
   // Настройка библиотеки на форму
   pristine = new Pristine(form, {
@@ -63,7 +99,9 @@ const inputUploadChangeHandler = () => {
   const matches = FILE_TYPES.some((type) => fileName.endsWith(type));
   if (matches) {
     imgPreview.src = URL.createObjectURL(file);
-    effectsPreviews.forEach((item) => item.style.backgroundImage = `url(${URL.createObjectURL(file)})`);
+    effectsPreviews.forEach((item) => {
+      item.style.backgroundImage = `url(${URL.createObjectURL(file)})`;
+    });
   }
 };
 
@@ -94,9 +132,6 @@ function elKeydownHandler (evt) {
   }
 }
 
-// Функция проверки поля комментариев
-const validateInputDescription = (value) => value.length <= DESCRIPTION_LENGTH;
-
 // Коллбек, останавливающий всплытие события нажатия кнопки Esc
 const inputKeydownHandler = (evt) => {
   if (isEscapeKey(evt)) {
@@ -107,40 +142,6 @@ const inputKeydownHandler = (evt) => {
 // Добавление слушателя события нажатия клавиш внутри полей описания фотографии и добавления хештегов
 inputDescription.addEventListener('keydown', inputKeydownHandler);
 inputHashtags.addEventListener('keydown', inputKeydownHandler);
-
-
-// Функция валидации поля хештегов
-const validateInputHashtags = (value) => {
-  const hashtags = value.split(' ').filter((item) => item.length).map((item) => item.toLowerCase());
-
-  if (!value.length) {
-    return true;
-  }
-
-  if (hashtags.length > HASHTAG_LENGTH) {
-    textHashtagError = TextErrors.HASHTAG_COUNT;
-    return false;
-  }
-
-  const hashtagsSet = new Set(hashtags);
-
-  if (hashtagsSet.size < hashtags.length) {
-    textHashtagError = TextErrors.HASHTAG_DUPLICATE;
-    return false;
-  }
-
-  const isHashtagsValid = hashtags.every((item) => REGEX_VALID_HASHTAG.test(item));
-
-  if (!isHashtagsValid) {
-    textHashtagError = TextErrors.HASHTAG_INVALID;
-    return false;
-  }
-
-  return true;
-};
-
-// Функция передачи сообщения об ошибке
-const getHashtagErrorMessage = () => textHashtagError;
 
 // Если форма отправлена успешно
 
@@ -177,6 +178,7 @@ const showSuccessMessage = () => {
 const buttonErrorClickHandler = () => {
   document.querySelector('.error').remove();
   document.removeEventListener('keydown', elErrorKeydownHandler);
+  document.addEventListener('keydown', elKeydownHandler);
 };
 
 function elErrorKeydownHandler (evt) {
@@ -197,6 +199,7 @@ const showErrorMessage = () => {
   const errorText = errorTemplate.cloneNode(true);
   const buttonError = errorText.querySelector('.error__button');
   buttonError.addEventListener('click', buttonErrorClickHandler);
+  document.removeEventListener('keydown', elKeydownHandler);
   document.addEventListener('keydown', elErrorKeydownHandler);
   errorText.addEventListener('click', errorTextClickHandler);
   body.append(errorText);
