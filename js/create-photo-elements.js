@@ -54,7 +54,7 @@ const setActiveButton = (activeButton) => {
   activeButton.classList.add('img-filters__button--active');
 };
 
-const sortingPhotoOnDiscussed = (a, b) => b.comments.length - a.comments.length;
+const sortPhotoOnDiscussed = (a, b) => b.comments.length - a.comments.length;
 
 const setFormFilterClick = (cb, data) => {
   formFilter.addEventListener('click', (evt) => {
@@ -69,7 +69,7 @@ const setFormFilterClick = (cb, data) => {
     }
 
     if(evt.target.id === 'filter-discussed') {
-      images = data.slice().sort(sortingPhotoOnDiscussed);
+      images = data.slice().sort(sortPhotoOnDiscussed);
     }
     cb(images);
   });

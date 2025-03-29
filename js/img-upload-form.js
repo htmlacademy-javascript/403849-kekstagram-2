@@ -65,7 +65,7 @@ const validateInputHashtags = (value) => {
 // Функция передачи сообщения об ошибке
 const getHashtagErrorMessage = () => textHashtagError;
 
-const initValidator = () => {
+const initializeValidator = () => {
   // Настройка библиотеки на форму
   pristine = new Pristine(form, {
     classTo: 'img-upload__field-wrapper',
@@ -89,7 +89,7 @@ const initValidator = () => {
 
 // Функция открытия формы редактирования изображения
 const inputUploadChangeHandler = () => {
-  initValidator();
+  initializeValidator();
   document.addEventListener('keydown', elKeydownHandler);
   addListeners();
   formOverlay.classList.remove('hidden');
@@ -147,10 +147,10 @@ inputHashtags.addEventListener('keydown', inputKeydownHandler);
 
 const buttonSuccessClickHandler = () => {
   document.querySelector('.success').remove();
-  document.removeEventListener('keydown', onDocumentSuccessKeydown);
+  document.removeEventListener('keydown', documentSuccessKeydownHandler);
 };
 
-function onDocumentSuccessKeydown (evt) {
+function documentSuccessKeydownHandler (evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     buttonSuccessClickHandler();
@@ -168,7 +168,7 @@ const showSuccessMessage = () => {
   const successText = successTemplate.cloneNode(true);
   const buttonSuccess = successText.querySelector('.success__button');
   buttonSuccess.addEventListener('click', buttonSuccessClickHandler);
-  document.addEventListener('keydown', onDocumentSuccessKeydown);
+  document.addEventListener('keydown', documentSuccessKeydownHandler);
   successText.addEventListener('click', successTextClickHandler);
   body.append(successText);
 };
