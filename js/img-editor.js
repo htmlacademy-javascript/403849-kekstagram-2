@@ -149,7 +149,7 @@ const removeListeners = () => {
   buttonScaleBigger.removeEventListener('click', buttonBiggerClickHandler);
   sliderContainer.noUiSlider.destroy();
   imgPreview.style.filter = '';
-  imgPreview.style.transform = `scale(1)`;
+  imgPreview.style.transform = 'scale(1)';
   scaleControl.value = '100%';
   effectLevel.value = '';
 };
